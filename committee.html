@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <title>ကျောင်းအကျိုးဆောင်အဖွဲ့</title>
+  <style>
+    body {
+      font-family: Pyidaungsu, sans-serif;
+      background-color: #f5fbff;
+      padding: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 32px;
+      color: #2d4c70;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #d0ecff;
+    }
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: 90%;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2c81ba;
+    }
+    .form-container {
+      margin: 20px auto;
+      width: 90%;
+      text-align: left;
+    }
+    .back-button {
+      display: block;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>ကျောင်းအကျိုးဆောင်အဖွဲ့</h2>
+
+  <table id="committeeTable">
+    <thead>
+      <tr>
+        <th>စဉ်</th>
+        <th>အမည်</th>
+        <th>ရာထူး</th>
+        <th>တာဝန်</th>
+        <th>ဖျက်ရန်</th>
+      </tr>
+    </thead>
+    <tbody id="committeeBody"></tbody>
+  </table>
+
+  <div class="form-container">
+    <h3>➕ အဖွဲ့ဝင်အသစ်ထည့်ရန်</h3>
+    <input type="text" id="name" placeholder="အမည်">
+    <input type="text" id="position" placeholder="ရာထူး">
+    <input type="text" id="responsibility" placeholder="တာဝန်">
+    <button onclick="addMember()">ထည့်မည်</button>
+  </div>
+
+  <button class="back-button" onclick="history.back()">🔙 နောက်သို့</button>
+
+  <script>
+    let committee = JSON.parse(localStorage.getItem("committeeList")) || [];
+
+    function renderTable() {
+      const tbody = document.getElementById("committeeBody");
+      tbody.innerHTML = "";
+      committee.forEach((c, index) => {
+        tbody.innerHTML += `<tr>
+          <td>${index + 1}</td>
+          <td>${c.name}</td>
+          <td>${c.position}</td>
+          <td>${c.responsibility}</td>
+          <td><button onclick="deleteMember(${index})">❌</button></td>
+        </tr>`;
+      });
+      localStorage.setItem("committeeList", JSON.stringify(committee));
+    }
+
+    function addMember() {
+      const name = document.getElementById("name").value;
+      const position = document.getElementById("position").value;
+      const responsibility = document.getElementById("responsibility").value;
+      if (name && position && responsibility) {
+        committee.push({ name, position, responsibility });
+        renderTable();
+        document.querySelectorAll("input").forEach(input => input.value = "");
+      } else {
+        alert("အချက်အလက်အားလုံးဖြည့်ရန်လိုပါတယ်!");
+      }
+    }
+
+    function deleteMember(index) {
+      if (confirm("ဤအဖွဲ့ဝင်အား ဖျက်မှာသေချာလား?")) {
+        committee.splice(index, 1);
+        renderTable();
+      }
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>
